@@ -1,0 +1,106 @@
+﻿AppType=StandardJava
+Build1=Default,com.puterise.resget
+Group=Default Group
+Library1=jcore
+Library2=jokhttputils2
+Library3=json
+NumberOfFiles=0
+NumberOfLibraries=3
+NumberOfModules=0
+Version=10.3
+@EndOfDesignText@
+#Region Project Attributes 
+#CommandLineArgs:
+#MergeLibraries: True
+#Macro: Title, GitHub Desktop, ide://run?file=%COMSPEC%&Args=/c&Args=github&Args=..\..\
+#Macro: Title, Objects, ide://run?file=%WINDIR%\SysWOW64\explorer.exe&Args=%PROJECT%\Objects
+#Macro: Title, Build only, ide://run?File=%B4X%\B4JBuilder.exe&Args=-Task%3DBuild&Args=-BaseFolder%3D..&Args=-Obfuscate=False&Args=-Output%3Dresget
+#If Release
+#CustomBuildAction: 2, %COMSPEC%, /c copy %PROJECT%\Objects\resget.jar %ADDITIONAL%\..\B4X\resget.jar
+#End If
+#End Region
+
+Sub Process_Globals
+	Private ResCount As Int
+	Private Checked As Int
+End Sub
+
+Sub AppStart (Args() As String)
+	Log("resget (v1.00) started...")
+	If Args.Length = 0 Then
+		Log("Project's path not provided")
+		Log("resget ended")
+		ExitApplication
+	End If
+	If Args.Length = 2 Then
+		CheckResource(Args(0), Args(1).As(String).EqualsIgnoreCase("True"))
+	Else
+		CheckResource(Args(0), True)
+	End If
+	StartMessageLoop
+End Sub
+
+Sub CheckResource (Dir As String, Overwrite As Boolean)
+	If File.Exists(Dir, "resources.json") = False Then
+		Log("resources.json not found")
+		ExitApplication
+	End If
+	Log("resources.json found")
+	Dim json As String = File.ReadString(Dir, "resources.json")
+	Dim root As String = File.Combine(Dir, "Objects")
+	Dim resmap As Map = json.As(JSON).ToMap
+	Dim Resources As List = resmap.Get("Resources")
+	ResCount = Resources.Size
+	If ResCount = 0 Then
+		Log("resget ended")
+		ExitApplication
+	End If
+	Checked = 0
+	Log("Overwrite=" & Overwrite)
+	For Each Resource As Map In Resources	
+		Dim ResName As String = Resource.Get("File")
+		Dim DownloadLink As String = Resource.Get("Link")
+		Log(ResName)
+		Log(DownloadLink)
+		If File.Exists(root, ResName) = False Or Overwrite Then
+			Dim Path As String = File.Combine(root, ResName)
+			Dim Folder As String = File.GetFileParent(Path)
+			Dim FileName As String = File.GetName(Path)
+			If File.Exists(Folder, "") = False Then
+				Log("Creating directory...")
+				Log(Folder)
+				File.MakeDir(Folder, "")
+			End If
+			Wait For ( Download(Folder, FileName, DownloadLink) ) Complete (Success As Boolean)
+		End If
+		CheckAndLog
+	Next
+End Sub
+
+Sub Download (FileDirectory As String, FileName As String, DownloadLink As String) As ResumableSub
+	Log($"Downloading ${FileName}..."$)
+	Dim success As Boolean
+	Dim job As HttpJob
+	job.Initialize("", Me)
+	job.Download(DownloadLink)
+	Wait For (job) JobDone(job As HttpJob)
+	If job.Success Then
+		Dim out As OutputStream = File.OpenOutput(FileDirectory, FileName, False)
+		File.Copy2(job.GetInputStream, out)
+		out.Close
+		Log($"${FileName} saved"$)
+		success = True
+	Else
+		Log(job.ErrorMessage)
+	End If
+	job.Release
+	Return success
+End Sub
+
+Sub CheckAndLog
+	Checked = Checked + 1
+	If Checked = ResCount Then
+		Log("resget ended")
+		ExitApplication
+	End If
+End Sub
