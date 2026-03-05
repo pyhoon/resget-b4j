@@ -23,15 +23,15 @@ This can make server project templates file size smaller by eliminating the reso
     "Resources": [
         {
             "File": "www/img/B4X.png",
-            "Link": "https://raw.githubusercontent.com/pyhoon/jrdc2-server-template-b4j/refs/heads/main/JRDC%20Server%20(3.20)/Objects/www/img/B4X.png"
+            "Link": "https://github.com/pyhoon/jrdc2-server-template-b4j/blob/main/source/Objects/www/img/B4X.png"
         },
         {
             "File": "www/img/cover.jpg",
-            "Link": "https://raw.githubusercontent.com/pyhoon/jrdc2-server-template-b4j/refs/heads/main/JRDC%20Server%20(3.20)/Objects/www/img/cover.jpg"
+            "Link": "https://github.com/pyhoon/jrdc2-server-template-b4j/blob/main/source/Objects/www/img/cover.jpg"
         },
         {
             "File": "www/img/favicon-32x32.png",
-            "Link": "https://raw.githubusercontent.com/pyhoon/jrdc2-server-template-b4j/refs/heads/main/JRDC%20Server%20(3.20)/Objects/www/img/favicon-32x32.png"
+            "Link": "https://github.com/pyhoon/jrdc2-server-template-b4j/blob/main/source/Objects/www/img/favicon-32x32.png"
         }
     ]
 }
