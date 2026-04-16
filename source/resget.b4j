@@ -7,9 +7,13 @@ Library3=json
 NumberOfFiles=0
 NumberOfLibraries=3
 NumberOfModules=0
-Version=10.3
+Version=10.5
 @EndOfDesignText@
-#Region Project Attributes 
+#Region Project Attributes
+' Product: Resources Downloader for B4X Projects
+' Version: 1.10
+' License: MIT License
+' Developer: Poon Yip Hoon (Aeric)
 #CommandLineArgs:
 #MergeLibraries: True
 #Macro: Title, GitHub Desktop, ide://run?file=%COMSPEC%&Args=/c&Args=github&Args=..\..\
@@ -26,7 +30,7 @@ Sub Process_Globals
 End Sub
 
 Sub AppStart (Args() As String)
-	Log("resget (v1.00) started...")
+	Log("resget (v1.10) started...")
 	If Args.Length = 0 Then
 		Log("Project's path not provided")
 		Log("resget ended")
@@ -41,12 +45,16 @@ Sub AppStart (Args() As String)
 End Sub
 
 Sub CheckResource (Dir As String, Overwrite As Boolean)
-	If File.Exists(Dir, "resources.json") = False Then
+	If File.Exists(Dir, "res.json") = False And File.Exists(Dir, "resources.json") = False Then
 		Log("resources.json not found")
 		ExitApplication
 	End If
 	Log("resources.json found")
-	Dim json As String = File.ReadString(Dir, "resources.json")
+	If File.Exists(Dir, "res.json") Then
+		Dim json As String = File.ReadString(Dir, "res.json")
+	Else
+		Dim json As String = File.ReadString(Dir, "resources.json")
+	End If
 	Dim root As String = File.Combine(Dir, "Objects")
 	Dim resmap As Map = json.As(JSON).ToMap
 	Dim Resources As List = resmap.Get("Resources")
