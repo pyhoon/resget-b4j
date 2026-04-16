@@ -18,9 +18,9 @@ Version=10.5
 #MergeLibraries: True
 #Macro: Title, GitHub Desktop, ide://run?file=%COMSPEC%&Args=/c&Args=github&Args=..\..\
 #Macro: Title, Objects, ide://run?file=%WINDIR%\SysWOW64\explorer.exe&Args=%PROJECT%\Objects
-#Macro: Title, Build only, ide://run?File=%B4X%\B4JBuilder.exe&Args=-Task%3DBuild&Args=-BaseFolder%3D..&Args=-Obfuscate=False&Args=-Output%3Dresget
+#Macro: Title, Build only, ide://run?File=%B4X%\B4JBuilder.exe&Args=-Task%3DBuild&Args=-BaseFolder%3D..&Args=-Obfuscate=False&Args=-Output%3D%PROJECT_NAME%
 #If Release
-#CustomBuildAction: 2, %COMSPEC%, /c copy %PROJECT%\Objects\resget.jar %ADDITIONAL%\..\B4X\resget.jar
+#CustomBuildAction: 2, %COMSPEC%, /c copy %PROJECT%\Objects\%PROJECT_NAME%.jar %ADDITIONAL%\..\B4X\%PROJECT_NAME%.jar
 #End If
 #End Region
 
