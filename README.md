@@ -1,4 +1,6 @@
 # Resources Downloader
+version: 1.10
+
 A tool where you can use to download the resources inside Objects directory for B4J projects. \
 This can make server project templates file size smaller by eliminating the resources inside www folder.
 
